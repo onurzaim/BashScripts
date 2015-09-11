@@ -1,6 +1,6 @@
 # ilgili dizine gidilir
 
-cd /scripts/erstream.ligtv.total
+cd /scripts/path
 
 # timedata dosyasi degistirtiltir.
 
@@ -25,6 +25,5 @@ sed -i '$ d' concurrent.list.ligtv.canli.5.txt
 sed -i '$ d' concurrent.list.ligtv.canli.5.txt
 sed -i '$ d' concurrent.list.ligtv.canli.5.txt
 sed -i '$ d' concurrent.list.ligtv.canli.5.txt
-abbix'e yollanir.
-# Z
+
 cat concurrent.list.ligtv.canli.5.txt
