@@ -9,4 +9,4 @@ Bash Scripts written for various puropses
 
 **KillAllRunningBash.sh** -  Process killing script that will kill processes with a name pattern.
 
-**ProcessCheck.sh** - Application process controller. It will start the process if is does not exsist in ps output.
+**ProcessCheck.sh** - Application process controller. It will start the process if it does not exsist in ps output.
