@@ -1,0 +1,58 @@
+#!/bin/sh
+HOST=`hostname`
+SIZETMP=/sysman_utils/sizelog.tmp
+STATE_COUNTER=/sysman_utils/state_counter_size.lck
+NOTIFY="mail@address.com"
+FROM="mail@address.com"
+
+rm -rf ${SIZETMP}
+touch ${SIZETMP}
+df -h | grep -v grep | awk '{ print $5 " " $6 " " $1 " " $2 " " $3 " " $4}' | while read output;
+do
+  echo $output
+  percent=$(echo $output | awk '{ print $1}' | cut -d'%' -f1  )
+  partition=$(echo $output | awk '{ print $2 }' )
+  size=$(echo $output | awk '{ print $4 }' )
+  filesystem=$(echo $output | awk '{ print $3 }' )
+  used=$(echo $output | awk '{ print $5 }' )
+  avail=$(echo $output | awk '{ print $6 }' )
+  if [ $percent -gt 80 ]; then
+    echo " $filesystem   $size   $used  $avail   $percent%   $partition" >> ${SIZETMP}
+fi
+done
+ALERT='OK'
+
+if [[ ! -s ${SIZETMP} && -f ${STATE_COUNTER} ]]
+then
+ALERT='CLEAR'
+MAILCOUNTER=0
+rm -rf ${STATE_COUNTER}
+fi
+
+if [ -s ${SIZETMP} ]
+then
+ALERT='CRITICAL'
+   if [[ ! -f ${STATE_COUNTER} ]]
+   then
+        MAILCOUNTER=1
+        echo $MAILCOUNTER>${STATE_COUNTER}
+   else
+        MAILCOUNTER=`cat ${STATE_COUNTER}`
+        MAILCOUNTER=$( expr $MAILCOUNTER + 1 )
+        echo $MAILCOUNTER>${STATE_COUNTER}
+   fi
+fi
+
+if [[ $ALERT != 'OK' && $MAILCOUNTER -le 10 ]]
+  then
+if [[ $ALERT = 'CRITICAL' && $MAILCOUNTER -eq 1 ]]
+  then
+      cat ${SIZETMP}| mailx -r ${FROM} -s "File System Size :${ALERT} ${MAILCOUNTER}  $HOST" ${NOTIFY},smticket@digiturk.com.tr
+elif [ $ALERT = 'CLEAR' ]
+  then
+      cat ${SIZETMP}| mailx -r ${FROM} -s "File System Size :${ALERT} ${MAILCOUNTER}  $HOST" ${NOTIFY},smticket@digiturk.com.tr
+elif [[ $ALERT = 'CRITICAL' && $MAILCOUNTER -ne 1 ]]
+  then
+      cat ${SIZETMP}| mailx -r ${FROM} -s "File System Size :${ALERT} ${MAILCOUNTER}  $HOST" ${NOTIFY}
+fi
+fi
