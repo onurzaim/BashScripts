@@ -15,6 +15,7 @@ sleep 1;
 echo data;
 sleep 1;
 echo Subject: Subject Name;
+echo Content-Type: text/html;
 echo
 echo
 echo "$Concurrent";
