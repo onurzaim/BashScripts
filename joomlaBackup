@@ -1,0 +1,13 @@
+d=`date +%Y%m%d-%H%m%S`
+#d=`date +%s`
+
+params=$(grep '\$host\|\$user\|\$password\|\$db\s' configuration.php | awk -F "\'" '{ print $2 }')
+echo "$params" > /tmp/jml_$d
+
+host=$(sed  -n '1p' /tmp/jml_$d)
+user=$(sed  -n '2p' /tmp/jml_$d)
+password=$(sed  -n '3p' /tmp/jml_$d)
+db=$(sed -n '4p' /tmp/jml_$d)
+
+mysqldump -u$user -p$password -h$host -B $db > backup_$d.sql
+tar -cvzf ../fileBackup_$d.tar.gz *
