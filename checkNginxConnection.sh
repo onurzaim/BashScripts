@@ -1,5 +1,5 @@
 connList=$(tail -20000 /web/logs/artamonline.access_log | awk -F ' ' ' { print $1 } ' | sort | uniq -c | sort -n)
-sleep 2
+sleep 15
 connListNext=$(tail -20000 /web/logs/artamonline.access_log | awk -F ' ' ' { print $1 } ' | sort | uniq -c | sort -n)
 
 #ipList=$(echo "$connList" | tail -10 | awk '{ print $2 }')
