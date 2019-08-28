@@ -29,8 +29,6 @@ do
         curl -i -XPOST "http://$host:8086/write?db=$db" --data-binary "temp.backroom value=$temp"
         curl -i -XPOST "http://$host:8086/write?db=$db" --data-binary "humid.backroom value=$humid"
 
-        sleep 10
-
 ### try this
 ### curl -i -XPOST 'http://localhost:8086/write?db=th' --data-binary "temp value=$temp humid value$humid"
 
